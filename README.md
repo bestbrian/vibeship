@@ -2,6 +2,16 @@
 
 > **Started 10 projects this year and shipped 0? This framework changes that.**
 
+## Quick Start (2 minutes)
+
+```bash
+npx vibeship my-app
+cd my-app
+cat QUICK_START.md  # DO NOT SKIP/SKIM SETUP
+```
+
+**What you get:** A framework that ships features daily with AI, prevents abandoned projects, and builds real software instead of endless prototypes.
+
 ## The Problem
 
 You + AI = Amazing potential. But also:
@@ -15,7 +25,7 @@ Day 7: "Screw it, let's start over"
 
 **Sound familiar?** You're vibing but not shipping.
 
-## The Solution: Vibeship
+## The Solution
 
 A progressive framework for building REAL software with AI that:
 - 🚢 Ships working features daily
@@ -52,17 +62,7 @@ You: "Oh that would actually be useful by itself!"
 
 AI: "Perfect! Ship #1: 'Paste email, see long sentences highlighted.' That's a 2-hour ship. I'll set up your files..."
 
-## Quick Start (2 minutes)
 
-```bash
-# Recommended: NPX (always latest)
-npx create-vibeship my-app
-
-# Alternative: Direct from GitHub
-curl -s https://raw.githubusercontent.com/bestbrian/vibeship/main/create-vibeship.sh | bash -s my-app
-```
-
-Then spend 30 minutes on setup (YES, REALLY - it will save you 30 hours).
 
 ## What Makes Vibeship Different
 
@@ -185,7 +185,7 @@ Result: Working product with 10 deployments, full test coverage, zero technical 
 
 ```bash
 # 1. Install
-npx create-vibeship resume-enhancer
+npx vibeship resume-enhancer
 
 # 2. Plan (30 minutes - DO NOT SKIP)
 cd resume-enhancer
@@ -205,6 +205,14 @@ Already have a project? Add Vibeship:
 ```bash
 curl -s https://raw.githubusercontent.com/bestbrian/vibeship/main/add-vibeship.sh | bash
 ```
+**What it does:**
+- Creates `.vibe/` folder structure
+- Adds vibe commands to package.json
+- Detects your project type
+- Creates Ship #1: "Adopt Vibeship Framework"
+- Doesn't break existing code
+
+Perfect for: Legacy projects, team adoption, trying Vibeship risk-free
 
 ## Documentation
 

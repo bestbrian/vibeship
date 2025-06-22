@@ -5,14 +5,14 @@ Create a new Vibeship project with one command.
 ## Usage
 
 ```bash
-npx create-vibeship my-app
+npx vibeship my-app
 ```
 
 Or install globally:
 
 ```bash
-npm install -g create-vibeship
-create-vibeship my-app
+npm install -g vibeship
+vibeship my-app
 ```
 
 ## What This Creates
