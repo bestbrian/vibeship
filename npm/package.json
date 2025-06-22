@@ -1,0 +1,36 @@
+{
+  "name": "vibeship",
+  "version": "1.0.0",
+  "description": "Create a new Vibeship project - Ship daily. Document always. Test everything.",
+  "main": "index.js",
+  "bin": {
+    "vibeship": "./index.js"
+  },
+  "scripts": {
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "keywords": [
+    "vibeship",
+    "productivity",
+    "shipping",
+    "ai-development",
+    "progressive-development",
+    "create-app",
+    "framework"
+  ],
+  "author": "Brian (bestbrian)",
+  "license": "MIT",
+  "homepage": "https://github.com/bestbrian/vibeship#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bestbrian/vibeship.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bestbrian/vibeship/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
