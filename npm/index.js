@@ -108,17 +108,15 @@ function initExistingProject() {
       process.exit(0);
     }
 
-    // Download and run the init script
-    // You'll need to create an init-vibeship.sh script on your GitHub repo
-    const scriptUrl = 'https://raw.githubusercontent.com/bestbrian/vibeship/main/init-vibeship.sh';
+    // Download and run the add-vibeship script
+    const scriptUrl = 'https://raw.githubusercontent.com/bestbrian/vibeship/main/add-vibeship.sh';
     
-    // For now, we'll use the same script with an 'init' flag
-    // You can update this once you have a dedicated init script
-    downloadAndRunScript(scriptUrl, ['--init', '.'], () => {
+    downloadAndRunScript(scriptUrl, [], () => {
       console.log(`${colors.green}✅ Vibeship added successfully!${colors.reset}`);
       console.log(`${colors.yellow}Next steps:${colors.reset}`);
-      console.log(`  cat .vibe/INTEGRATION.md  # Follow the integration guide`);
-      console.log(`  cat .vibe/QUICK_START.md  # Review the Vibeship workflow`);
+      console.log(`  cat .vibe/state.md      # Document your architecture`);
+      console.log(`  cat .vibe/current.md    # Review your first ship`);
+      console.log(`  npm run vibe            # Check ship status`);
     });
   });
 }
@@ -133,9 +131,9 @@ function downloadAndRunScript(scriptUrl, scriptArgs, onSuccess) {
       console.error(`${colors.red}❌ Failed to download script: HTTP ${response.statusCode}${colors.reset}`);
       
       // Check if it's a 404 and give specific message for init
-      if (response.statusCode === 404 && scriptArgs.includes('--init')) {
-        console.log(`${colors.yellow}💡 Init script not found. This feature might not be available yet.${colors.reset}`);
-        console.log(`${colors.yellow}💡 For now, you can manually copy the .vibe folder from a new project.${colors.reset}`);
+      if (response.statusCode === 404) {
+        console.log(`${colors.yellow}💡 Script not found. Please ensure the repository is up to date.${colors.reset}`);
+        console.log(`${colors.yellow}💡 Check: https://github.com/bestbrian/vibeship${colors.reset}`);
       }
       
       process.exit(1);
