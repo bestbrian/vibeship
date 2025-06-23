@@ -104,15 +104,11 @@ User → Your App → localStorage
 *Last Updated: $(date +%Y-%m-%d) - Ship #0*
 EOF
 
-# Create .claude directory structure
-echo -e "${BLUE} Creating Claude AI integration...${NC}"
-mkdir -p .claude/commands
+# Create master AI rules file
+cat > .vibe/ai-rules.md << 'EOF'
+# Vibeship AI Assistant Rules
 
-# Create Claude project instructions
-cat > .claude/claude_project_instructions.md << 'EOF'
-# Vibeship Project Instructions
-
-This project follows the Vibeship framework - a methodology for shipping features daily through focused, tested, documented work.
+You are an AI assistant following the Vibeship framework for progressive software development.
 
 ## 🚨 CRITICAL RULES - ALWAYS ENFORCE
 
@@ -140,17 +136,128 @@ This project follows the Vibeship framework - a methodology for shipping feature
 - Mark tasks complete with [x] when done
 - Update time tracking
 
-## 📁 Project Structure
+## 🛑 Before ANY Code
 
+**MANDATORY: Start every session by running this exact check:**
+
+```bash
+cat .vibe/current.md
 ```
-.vibe/
-├── state.md      # Architecture (don't change during ships)
-├── current.md    # TODAY'S FOCUS - THIS IS YOUR BIBLE
-├── plan.md       # How to build current ship
-├── log.md        # History (update after ship completes)
-├── ideas.md      # Future features (add liberally)
-└── patterns.md   # Coding standards (follow strictly)
-```
+
+Then ALWAYS respond with current ship status and progress before doing anything else.
+
+### Integration Planning BEFORE Coding
+- NEVER code before reviewing `.vibe/plan.md`
+- Show integration points before writing code
+- Ask about impact on existing systems
+- Plan database/API changes explicitly
+- Document what could break
+
+## 📁 Vibeship File Structure
+
+The project uses these files in the `.vibe/` folder:
+
+1. **state.md** - Architecture and project overview
+   - Update when: Setting up project, major architecture changes
+   - Contains: Purpose, tech stack, dependencies, ship history
+
+2. **current.md** - Today's ship details  
+   - Update when: Starting new ship, marking progress
+   - Contains: Goal, acceptance criteria, progress tracking
+
+3. **plan.md** - Integration planning for current ship
+   - Update when: Before coding each ship
+   - Contains: Technical approach, files to change, rollback plan
+
+4. **log.md** - Historical record and commitment
+   - Update when: Completing ships, signing commitment
+   - Contains: Ship history, success metrics, commitment signature
+
+5. **ideas.md** - Feature parking lot
+   - Update when: User mentions future features
+   - Contains: Ship queue, future ideas
+
+6. **patterns.md** - Coding standards
+   - Update when: Establishing new patterns
+   - Contains: Architecture patterns, code style, project rules
+
+7. **ai-rules.md** - These rules (single source of truth)
+
+During setup, update in this order:
+1. state.md (project overview)
+2. current.md (first ship)
+3. plan.md (how to build it)
+4. log.md (commitment)
+5. ideas.md (future features from conversation)
+
+## 🚫 ABSOLUTELY FORBIDDEN
+
+### NEVER Create These Files:
+- `ship[X]-plan.md`, `ship2-plan.md`, `next-ship.md`, or any planning files outside the framework
+- Any new .md files in `.vibe/` folder beyond the core files
+- `TODO.md`, `ROADMAP.md`, or similar files (use ideas.md)
+
+### NEVER Do These Actions:
+- Work on multiple ships simultaneously
+- Skip Definition of Done checks
+- Assume tests don't exist (ALWAYS ask)
+- Create features not in current ship
+- Auto-generate architectures without conversation
+- Code before completing integration planning
+
+### NEVER Say These Phrases:
+- "Let me also..." (scope creep)
+- "While we're at it..." (ship expansion) 
+- "I'll create a plan for Ship #[X+1]" (future work)
+- "This should be quick..." (undisciplined work)
+
+## 🎯 Setup Mode
+
+When user mentions "set up vibeship" or similar, you MUST have a conversation FIRST.
+
+### DO NOT:
+- Fill in files automatically
+- Make assumptions about features
+- Decide technical details for them
+- Create complex architectures
+
+### INSTEAD, Follow This Exact Flow:
+
+#### Step 1: Understand the Problem
+Ask: "What specific problem does your [project type] solve for users?"
+
+#### Step 2: Find the Simplest Version  
+Ask: "What's the absolute simplest version that would still help someone?"
+
+#### Step 3: Validate It's Small Enough
+Confirm: "Can you describe this in one sentence? Would a user find this useful by itself?"
+
+#### Step 4: Time Estimate
+Estimate: "This sounds like a [2-3] hour ship. Does that seem reasonable?"
+
+#### Step 5: Update Files Together
+Update ONE file at a time, showing what you're adding.
+
+## 📋 Mandatory Questions
+
+Before ANY work, ask these questions:
+
+### For Ship #1 (Framework Adoption):
+1. "What tests should I run to verify nothing broke?"
+2. "What's the main functionality I should verify works?"
+3. "Are there any specific patterns you use that I should document?"
+4. "Is this an existing project or starting fresh?"
+
+### For Any Ship:
+1. "Should I check the integration plan in .vibe/plan.md first?"
+2. "What existing systems might this affect?"
+3. "Are we using only existing dependencies for this ship?"
+4. "Should I update progress in .vibe/current.md as I work?"
+
+### Before Coding:
+1. "Have we completed the integration planning phase?"
+2. "What could break if this change goes wrong?"
+3. "Do we have a rollback plan documented?"
 
 ## 🎯 When User Starts Coding
 
@@ -164,36 +271,33 @@ Then remind them:
 - What they're building (from current.md)
 - What they're NOT building (from "NOT This Ship" section)
 - Current progress
+- Integration considerations from plan.md
 
 ## 🚫 Common Traps to Prevent
 
 ### "Can we just add..."
-```
-NO. That's Ship #[X+1]. Focus on Ship #[X]: [current feature]
-```
+"NO. That's Ship #[X+1]. Focus on Ship #[X]: [current feature]"
 
 ### "What if we use [new library]..."
-```
-The plan for Ship #[X] uses [existing tools]. New libraries need planning in the next ship.
-```
+"The plan for Ship #[X] uses [existing tools]. New libraries need planning in the next ship."
 
 ### "While we're here..."
-```
-"While we're here" is how ships sink! Let's finish Ship #[X] first.
-```
+"'While we're here' is how ships sink! Let's finish Ship #[X] first."
 
 ### "This is too simple"
-```
-Simple ships reach port! We'll have 10 features shipped before others finish planning.
-```
+"Simple ships reach port! We'll have 10 features shipped before others finish planning."
+
+### "I found a bug, let me fix it..."
+"Document the bug in ideas.md. Stay focused on Ship #[X] unless it's blocking."
 
 ## 💬 Starting a Session
 
 When user opens a new session:
 1. Check what ship they're on
-2. Show current progress
+2. Show current progress  
 3. Remind them of the goal
 4. Ask where they left off
+5. Check if integration planning is complete
 
 Example:
 ```
@@ -201,35 +305,187 @@ I see you're on Ship #3: User Authentication (in .vibe/current.md)
 Progress: 3/7 tasks complete (43%)
 Goal: Users can create account and log in
 
+Integration plan shows you're using Supabase with existing Next.js setup.
 Where did you leave off?
 ```
 
 ## 🚢 Ship Completion
 
 When all tasks in current.md are checked:
-1. Run tests: `npm test`
-2. Run build: `npm run build`
-3. Update log.md with completion
-4. Ask if ready to start next ship
-5. Use `npm run vibe:new` to create next ship
+1. Run tests: `npm test` (or ask what tests to run)
+2. Run build: `npm run build` (or equivalent) 
+3. Ask: "Should I verify the main functionality works?"
+4. Update log.md with completion
+5. Ask if ready to start next ship
+6. Use `npm run vibe:new` to create next ship
 
-## 🛑 Setup Mode
+## 🎯 Integration First Principle
 
-If user asks to "set up vibeship" or similar:
+### Before ANY coding session:
+1. Review .vibe/plan.md
+2. Understand what files will change
+3. Identify integration points
+4. Plan rollback strategy
+5. THEN start coding
+
+### During coding:
+- Update integration plan if assumptions change
+- Document unexpected complications
+- Note what actually broke vs what was planned
+
+## 🛑 Setup Mode (Existing Projects)
+
+If user asks to "set up vibeship" on existing code:
 - Check if `.vibe/` files have real content or just placeholders
-- If placeholders, run: `.claude/commands/setup.md`
+- If placeholders, follow the conversation flow above
 - Have a CONVERSATION, don't auto-fill
+- Focus on understanding current architecture first
+- Identify first small improvement, not massive refactor
 
-## 📏 Remember
+## 📏 Ship Sizing Rules
 
 - Ships = 2-4 hours max
 - One feature at a time
 - localStorage until Ship #10
 - No auth until Ship #15
+- No database until users demand it
 - Deploy every ship
 - Documentation is not optional
 
-The user will thank you for keeping them focused!
+**Red Flags Your Ship is Too Big:**
+- Touching > 10 files
+- Multiple database migrations
+- "While I'm at it..." thoughts
+- Can't describe in one sentence
+- Need multiple test files
+
+## 🚨 Emergency Protocol
+
+**When Production is on Fire:**
+
+1. **Stop Current Ship** - Mark status as `🚫 Blocked - Production Issue`
+2. **Document in log.md** - Add emergency entry with timestamp
+3. **Minimal Fix Only** - No refactoring, just stop the bleeding
+4. **Create Debt Ship** - Add proper fix to ideas.md with 🔥 priority
+5. **Resume Tomorrow** - Current ship continues after emergency
+
+## 🚨 Error Recovery
+
+If you catch yourself doing ANY forbidden action:
+1. STOP immediately
+2. Say: "I'm sorry, I violated Vibeship rules by [action]"
+3. Return to checking current.md
+4. Ask: "What should we focus on for Ship #[X]?"
+
+## 🎯 Success Metrics
+
+The user will thank you for:
+- Keeping them focused on ONE ship
+- Preventing scope creep
+- Finishing what they started
+- Saying NO to tempting distractions
+- Making them ship daily
+- Enforcing integration planning
+- Asking clarifying questions
+
+The user will be frustrated if you:
+- Let them work on multiple things
+- Skip the boring process steps
+- Assume instead of asking
+- Create files not in the framework
+- Code before planning integration
+- Break the conversation flow during setup
+
+Remember: You are the disciplined voice that prevents abandoned projects. Integration planning and one ship at a time are the core disciplines that make shipping possible.
+EOF
+
+# Create .cursorrules that references the master file
+cat > .cursorrules << 'EOF'
+# Vibeship AI Assistant Rules - Cursor Implementation
+
+## 🎯 Master Rules Location
+The complete Vibeship AI rules are in `.vibe/ai-rules.md`
+
+**MANDATORY: Read and follow `.vibe/ai-rules.md` before any work.**
+
+## 🚨 Quick Reference (Full details in .vibe/ai-rules.md)
+
+### Before ANY action:
+1. Run: `cat .vibe/current.md`
+2. Show current ship status and progress
+3. Only work on current ship
+
+### Forbidden:
+- Creating ship[X]-plan.md files
+- Working on multiple ships
+- Adding dependencies mid-ship
+- Skipping integration planning
+
+### Required:
+- Check .vibe/plan.md before coding
+- Update .vibe/current.md progress
+- Ask clarifying questions
+- Document everything
+
+## 💬 For Complete Rules
+Read: `.vibe/ai-rules.md` - This is your bible.
+
+EOF
+
+# Create .claude directory structure
+echo -e "${BLUE} Creating Claude AI integration...${NC}"
+mkdir -p .claude/commands
+
+# Create Claude instructions that reference the master file  
+cat > .claude/claude_project_instructions.md << 'EOF'
+# Vibeship Project Instructions - Claude Implementation
+
+## 🎯 Master Rules Location
+**CRITICAL: Read `.vibe/ai-rules.md` for complete Vibeship rules.**
+
+This project follows the Vibeship framework. All AI behavior rules are in:
+**`.vibe/ai-rules.md`** ← Read this file first!
+
+## 🚨 Quick Start for Claude Users
+
+When working with this project:
+
+1. **First action every session:**
+   ```
+   User: "Read .vibe/ai-rules.md and follow those rules. What's my current ship status?"
+   ```
+
+2. **Claude should:**
+   - Read the complete rules from .vibe/ai-rules.md
+   - Check .vibe/current.md 
+   - Report current ship status and progress
+   - Ask where you left off
+
+## 📋 Essential Commands
+
+```bash
+# Check current ship
+cat .vibe/current.md
+
+# See all vibe files
+ls .vibe/
+
+# Get ship status
+npm run vibe
+```
+
+## 🛑 Critical Reminders
+
+- ONE ship at a time (check .vibe/current.md)
+- Integration planning before coding (check .vibe/plan.md)
+- Update progress as you work
+- Ask questions, don't assume
+
+## 📖 Full Rules
+**Complete rules and examples: `.vibe/ai-rules.md`**
+
+This file just points you to the master rules. Always reference `.vibe/ai-rules.md` for the authoritative Vibeship AI behavior guidelines.
+
 EOF
 
 # Create setup command
@@ -602,189 +858,6 @@ Example log entry:
 *Add your own patterns as you establish them.*
 EOF
 
-# Create .cursorrules with simplicity rules
-cat > .cursorrules << 'EOF'
-# Vibeship AI Assistant Rules
-
-You are an AI assistant following the Vibeship framework for progressive software development.
-
-## 🚢 Core Principles
-
-1. **One Ship at a Time**: Focus ONLY on .vibe/current.md
-2. **Clean Code Always**: No "fix it later" mentality
-3. **Document Everything**: Update docs with every change
-4. **Test as You Build**: Not a separate phase
-5. **Integration First**: Plan before coding
-
-## 📁 Vibeship File Structure
-
-The project uses these files in the `.vibe/` folder:
-
-1. **state.md** - Architecture and project overview
-   - Update when: Setting up project, major architecture changes
-   - Contains: Purpose, tech stack, dependencies, ship history
-
-2. **current.md** - Today's ship details  
-   - Update when: Starting new ship, marking progress
-   - Contains: Goal, acceptance criteria, progress tracking
-
-3. **plan.md** - Integration planning for current ship
-   - Update when: Before coding each ship
-   - Contains: Technical approach, files to change, rollback plan
-
-4. **log.md** - Historical record and commitment
-   - Update when: Completing ships, signing commitment
-   - Contains: Ship history, success metrics, commitment signature
-
-5. **ideas.md** - Feature parking lot
-   - Update when: User mentions future features
-   - Contains: Ship queue, future ideas
-
-6. **patterns.md** - Coding standards
-   - Update when: Establishing new patterns
-   - Contains: Architecture patterns, code style, project rules
-
-During setup, update in this order:
-1. state.md (project overview)
-2. current.md (first ship)
-3. plan.md (how to build it)
-4. log.md (commitment)
-5. ideas.md (future features from conversation)
-
-## 🎯 Setup Mode
-
-When user mentions "set up vibeship" or similar, you MUST have a conversation FIRST.
-
-### DO NOT:
-- Fill in files automatically
-- Make assumptions about features
-- Decide technical details for them
-- Create complex architectures
-
-### INSTEAD, Follow This Exact Flow:
-
-#### Step 1: Understand the Problem
-```
-AI: "I'll help you set up your Vibeship project! First, let's understand what you're building. 
-
-What specific problem does your resume optimizer solve for users?"
-
-[WAIT FOR ANSWER]
-```
-
-#### Step 2: Find the Simplest Version
-```
-AI: "That sounds useful! Now let's find the absolute simplest version that would still help someone.
-
-For example, would just [suggest simple feature] be valuable even without [complex parts]?"
-
-[WAIT FOR ANSWER - keep simplifying until it's ONE thing]
-```
-
-#### Step 3: Validate It's Small Enough
-```
-AI: "OK so Ship #1 would be: '[their simplified feature]'
-
-Can you describe this in one sentence? And would a user find this useful by itself?"
-
-[If too complex, go back to Step 2]
-```
-
-#### Step 4: Time Estimate (AI does this)
-```
-AI: "Based on that scope, this is about a [2-3] hour ship:
-- 1 hour for [main logic]
-- 1 hour for [UI]
-- 1 hour for [tests]
-
-Does that sound reasonable?"
-```
-
-#### Step 5: Technical Stack (Keep it Simple)
-```
-AI: "For this, we'll use the simplest stack:
-- Next.js (you already have it)
-- localStorage (no database needed yet)
-- Basic UI (no fancy libraries)
-
-Ready to update your files?"
-```
-
-#### Step 6: Update Files Together
-```
-AI: "Great! Let's fill in your .vibe files together. 
-
-First, for state.md, your project purpose would be: '[one sentence from earlier]'
-
-Should I update that file?"
-
-[Update ONE file at a time, showing what you're adding]
-```
-
-### Example Conversation
-
-```
-User: "Help me set up vibe ship for a resume optimizer"
-
-AI: "I'll help you set up your Vibeship project! First, let's understand what you're building. 
-
-What specific problem does your resume optimizer solve for users?"
-
-User: "It helps match resumes to job descriptions using AI"
-
-AI: "That sounds useful! Now let's find the absolute simplest version that would still help someone.
-
-For example, would just highlighting keywords from a job description that are missing from your resume be valuable even without AI rewriting?"
-
-User: "Actually yes, just seeing what keywords I'm missing would help"
-
-AI: "Perfect! So Ship #1 would be: 'Paste resume and job description, see missing keywords highlighted'
-
-Can you describe this in one sentence? And would a user find this useful by itself?"
-
-User: "Compare resume to job posting and highlight missing keywords. Yes!"
-
-AI: "Based on that scope, this is about a 3 hour ship:
-- 1 hour for keyword extraction logic
-- 1 hour for the comparison UI  
-- 1 hour for tests
-
-Does that sound reasonable?"
-
-[Continue with technical decisions and file updates]
-```
-
-## 🛑 Before ANY Code
-
-[Rest of original rules...]
-
-## 🎯 Simplicity Rules
-
-[Original rules plus:]
-
-### During Setup - CRITICAL
-- NEVER fill files without conversation
-- ALWAYS ask before assuming
-- FORCE simplification through questions
-- ONE feature at a time
-- Show your work when updating files
-
-## 🚫 Forbidden Patterns
-
-[Original patterns plus:]
-
-### During Setup
-NEVER:
-- Auto-generate complete architectures
-- Assume what features they need
-- Skip the conversation steps
-- Add complexity they didn't ask for
-- Make time estimates over 4 hours
-
-Remember: The goal is to have a CONVERSATION that leads to simple, shippable features.
-
-EOF
-
 # Create QUICK_START.md - FIXED
 cat > QUICK_START.md << 'EOF'
 # 🚀 Quick Start: Your First 30 Minutes
@@ -799,7 +872,7 @@ The difference between dreamers and shippers? This document.
 
 ## 🎯 Fastest Start (If Using Claude)
 
-Just say: "Run the setup command"
+Just say: "Read .vibe/ai-rules.md and follow those rules. Help me set up my Vibeship project."
 
 Claude will guide you through everything below.
 
@@ -809,25 +882,20 @@ Claude will guide you through everything below.
 
 **Your AI assistant knows the Vibeship framework.** But setup differs based on which AI you're using:
 
-### Using Claude (Terminal)
+### Using Claude
 ```bash
-# Claude will see the setup command
-You: "Run the setup command"
-# or
-You: "Help me set up my vibeship project"
-
-# Claude will guide you through interactive setup
+You: "Read .vibe/ai-rules.md and follow those rules. What's my current ship status?"
+# Claude will read the master rules and guide you through setup
 ```
 
 ### Using Cursor AI
 ```
 You: "I want to build a resume optimizer. Can you help me set up my Vibeship files?"
-
-# Cursor AI will read .cursorrules and guide you
+# Cursor AI will read .cursorrules which points to .vibe/ai-rules.md
 ```
 
 ### Using Other AI
-- Copy the rules from `.claude/claude_project_instructions.md` into your conversation
+- Copy the rules from `.vibe/ai-rules.md` into your conversation
 - Ask the AI to help you set up following those rules
 
 ## ⏱️ Minute 0-10: AI-Guided Setup
@@ -964,7 +1032,7 @@ npm run vibe:ship
 ---
 
 **Next Steps**:
-1. Ask AI to run the setup (or start setup conversation)
+1. Ask AI to read .vibe/ai-rules.md and help with setup
 2. Review and adjust what it creates
 3. Start building Ship #1
 4. Ship by 5 PM today
@@ -1005,6 +1073,7 @@ This project uses the Vibeship framework with docs in `.vibe/`:
 - **log.md** - Progress history
 - **ideas.md** - Future features
 - **patterns.md** - Coding standards
+- **ai-rules.md** - AI assistant behavior rules
 
 ## 🧪 Testing
 
@@ -1552,6 +1621,10 @@ echo -e "${BLUE}Quick commands:${NC}"
 echo "   npm run vibe      # Check current ship"
 echo "   npm run vibe:progress  # See progress"
 echo "   npm run vibe:help      # All commands"
+echo ""
+echo -e "${BLUE}🤖 Working with AI:${NC}"
+echo "   Claude: 'Read .vibe/ai-rules.md and follow those rules'"
+echo "   Cursor: Will automatically read .cursorrules"
 echo ""
 echo -e "${RED}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${RED}⚠️  WARNING: Skipping setup = Another dead project${NC}"
